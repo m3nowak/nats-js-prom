@@ -17,12 +17,12 @@ spec:
         - name: nats-js-prom
           image: {{ .Values.deployment.image }}
           imagePullPolicy: IfNotPresent
+          args:
+            - --config
+            - /config/config.yaml
           ports:
             - containerPort: 8080
               name: http
-          env:
-            - name: CONF_PATH
-              value: /config/config.yaml
           resources:
             limits:
               cpu: 100m
