@@ -30,8 +30,7 @@ async def hello_world(metrics: injectables.Metrics, nc: nats.aio.client.Client, 
                 label = msg.subject.replace('.', '_').replace('-', '_')
                 if cfg.export_prefix:
                     label = f'{cfg.export_prefix}_{label}'
-                ts = msg.metadata.timestamp or datetime.now()
-                ret.append(f'{label} {value} {int(ts.timestamp())}')
+                ret.append(f'{label} {value}')
             except ValueError:
                 print(f'Failed to parse {msg.data} as float')
             finally:
