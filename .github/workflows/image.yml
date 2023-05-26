@@ -36,3 +36,4 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ env.REGISTRY }}/m3nowak/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        file: Containerfile
