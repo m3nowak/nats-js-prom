@@ -19,6 +19,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+              name: http
           env:
             - name: CONF_PATH
               value: /config/config.yaml
