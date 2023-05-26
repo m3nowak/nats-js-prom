@@ -1,0 +1,19 @@
+{{ if .Values.monitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: nats-js-prom-monitor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: nats-js-prom
+    {{- range $key, $value := .Values.monitor.extraLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: nats-js-prom
+  podMetricsEndpoints:
+  - port: 8080
+    path: /
+{{ end }}

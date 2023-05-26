@@ -160,7 +160,12 @@ cython_debug/
 #.idea/
 .pdm-python
 
+.ruff_cache
 
 # Testing env
 config.yaml
 app.creds
+
+
+#helm
+nats-js-prom*.tgz

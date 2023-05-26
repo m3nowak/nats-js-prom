@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-js-prom-deploy
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-js-prom
+  template:
+    metadata:
+      labels:
+        app: nats-js-prom
+    spec:
+      containers:
+        - name: nats-js-prom
+          image: {{ .Values.deployment.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONF_PATH
+              value: /config/config.yaml
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - name: nats-js-prom-cfg
+              mountPath: /config
+              readOnly: true
+            - name: nats-js-prom-secret
+              mountPath: /secret
+              readOnly: true
+      volumes:
+        - name: nats-js-prom-cfg
+          configMap:
+            name: nats-js-prom-cfg
+        - name: nats-js-prom-secret
+          secret:
+            secretName: {{ .Values.config.creds.secretName }}

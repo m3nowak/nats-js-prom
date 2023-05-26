@@ -1,0 +1,24 @@
+config:
+  # name of stream domain, if needed
+  streamDomain: null
+  # name of stream, required
+  streamName: 'stream-name'
+  # mapping of text values to numeric values
+  valueMapping: {}
+  # nats server url
+  natsUrl: 'nats://localhost:4222'
+  # prefix for prom metrics
+  export_prefix: null
+  #credentials
+  creds:
+    #secret name
+    secretName:
+    #secret key
+    secretKey:
+deployment:
+  image: ghcr.io/m3nowak/nats-js-prom:0.1.0
+monitor:
+  #whether to enable pod monitor
+  enabled: true
+  #extra labels for pod monitor
+  extraLabels: {}

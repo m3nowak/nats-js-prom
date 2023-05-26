@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-js-prom-cfg
+  namespace: {{ .Release.Namespace }}
+data:
+  config.yaml: |
+    natsCredsPath: {{ printf "/secret/%s" .Values.config.creds.secretKey | quote }}
+    natsUrl: {{ .Values.config.natsUrl | quote }}
+    httpPort: 8080
+    httpHost: '0.0.0.0'
+    streamName: {{ .Values.config.streamName | quote }}
+    {{ if .Values.config.streamDomain }}
+    streamDomain: '{{ .Values.config.streamDomain | quote }}
+    {{ end }}
+
+    valueMapping:
+      {{- range $key, $value := .Values.config.valueMapping }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
+    
