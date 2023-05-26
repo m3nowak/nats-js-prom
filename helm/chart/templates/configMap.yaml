@@ -9,6 +9,7 @@ data:
     natsUrl: {{ .Values.config.natsUrl | quote }}
     httpPort: 8080
     httpHost: '0.0.0.0'
+    debug: {{ .Values.config.debug }}
     streamName: {{ .Values.config.streamName | quote }}
     {{ if .Values.config.streamDomain }}
     streamDomain: {{ .Values.config.streamDomain | quote }}

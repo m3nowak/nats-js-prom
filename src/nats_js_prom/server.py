@@ -13,7 +13,7 @@ from nats_js_prom import config, injectables
 @get('/', response_headers=[ResponseHeader(name='Content-Type', value='text/plain; version=0.0.4')])
 async def hello_world(metrics: injectables.Metrics, nc: nats.aio.client.Client, cfg: config.Config) -> str:
     js = nc.jetstream(domain=cfg.stream_domain)
-    cons = await js.add_consumer(cfg.stream_name, nats.js.api.ConsumerConfig(inactive_threshold=120))
+    cons = await js.add_consumer(cfg.stream_name, nats.js.api.ConsumerConfig(inactive_threshold=10))
     # str = await js.stream_info(cfg.stream_name)
     sub = await js.pull_subscribe('', cons.name, cfg.stream_name)
     pending = cons.num_pending or 0
@@ -51,6 +51,6 @@ def create_app(cfg: config.Config) -> Litestar:
         'nc': injectables.generate_nats_provide(cfg),
         'metrics': injectables.generate_metrics_provide(),
         'cfg': injectables.generate_config_provide(cfg)
-    })
+    }, debug=cfg.debug)
 
     return app

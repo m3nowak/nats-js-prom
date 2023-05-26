@@ -9,6 +9,8 @@ config:
   natsUrl: 'nats://localhost:4222'
   # prefix for prom metrics
   export_prefix: null
+  #enable debug mode
+  debug: false
   #credentials
   creds:
     #secret name

@@ -18,9 +18,11 @@ class Config(BaseModel):
     export_prefix: str | None
     stream_name: str
     stream_domain: str | None
+    debug: bool = Field(default=False)
     http_port: int = Field(default=8080)
     http_host: str = Field(default='0.0.0.0')
     value_mapping: dict[str, float] = Field(default_factory=dict)
+
 
 async def get_config(path):
     async with aiofiles.open(path, mode='r') as f:
