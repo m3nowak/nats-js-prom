@@ -1,7 +1,7 @@
 
 [project]
 name = "nats-js-prom"
-version = "0.1.0"
+dynamic = ["version"]
 description = "NATS JetStream exporter for Prometheus"
 authors = [
     {name = "Mikołaj Nowak", email = "12396461+m3nowak@users.noreply.github.com"},
@@ -45,3 +45,7 @@ dev = [
 ]
 [tool.pdm.build]
 package-dir = "src"
+
+
+[tool.pdm]
+version = { source = "file", path = "src/nats_js_prom/__init__.py" }
