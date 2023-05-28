@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: 0.1.4
+appVersion: 0.1.5
 description: A Helm chart nats-js-prom
 name: nats-js-prom
-version: 0.1.4
+version: 0.1.5
 maintainers:
   - name: Mikołaj Nowak
     email: 12396461+m3nowak@users.noreply.github.com

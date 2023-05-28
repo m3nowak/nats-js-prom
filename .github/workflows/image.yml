@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: nats-js-prom
 
 jobs:
-  build-and-push:
+  app-container:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,5 +35,23 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{ env.REGISTRY }}/m3nowak/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        tags: ${{ env.REGISTRY }}/m3nowak/${{ env.IMAGE_NAME }}:${{ env.VERSION }},${{ env.REGISTRY }}/m3nowak/${{ env.IMAGE_NAME }}:latest
         file: Containerfile
+  helm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up HELM
+      uses: azure/setup-helm@v1
+    - name: helm package
+      run: helm package helm/chart
+    - name: helm oci login
+      run: helm registry login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+    - name: helm push
+      run: helm registry push nats-js-prom-*.tgz oci://${{ env.REGISTRY }}/m3nowak/helm
+    
+    

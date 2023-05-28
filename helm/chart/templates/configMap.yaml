@@ -11,6 +11,7 @@ data:
     httpHost: '0.0.0.0'
     debug: {{ .Values.config.debug }}
     streamName: {{ .Values.config.streamName | quote }}
+    exportPrefix: {{ .Values.config.exportPrefix | quote }}
     {{ if .Values.config.streamDomain }}
     streamDomain: {{ .Values.config.streamDomain | quote }}
     {{ end }}
