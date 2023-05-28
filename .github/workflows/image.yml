@@ -54,6 +54,6 @@ jobs:
     - name: helm oci login
       run: helm registry login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     - name: helm push
-      run: helm registry push nats-js-prom-*.tgz oci://${{ env.REGISTRY }}/m3nowak/helm
+      run: helm push nats-js-prom-*.tgz oci://${{ env.REGISTRY }}/m3nowak/helm
     
     
