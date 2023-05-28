@@ -17,6 +17,6 @@ data:
 
     valueMapping:
       {{- range $key, $value := .Values.config.valueMapping }}
-      {{ $key }}: {{ $value }}
+      {{ $key | quote }}: {{ $value }}
       {{- end }}
     

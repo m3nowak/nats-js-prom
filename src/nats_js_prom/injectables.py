@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Generator
 
 import nats
 import prometheus_client as prom
@@ -31,5 +32,7 @@ def generate_nats_provide(cfg: config.Config) -> Provide:
         extra_params = {}
         if cfg.nats_creds_path:
             extra_params['user_credentials'] = cfg.nats_creds_path
-        return await nats.connect(cfg.nats_url, **extra_params)
+        nc = await nats.connect(cfg.nats_url, **extra_params)
+        yield nc
+        await nc.close()
     return Provide(provide_nats_connection)

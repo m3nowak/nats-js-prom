@@ -18,7 +18,7 @@ config:
     #secret key
     secretKey:
 deployment:
-  image: ghcr.io/m3nowak/nats-js-prom:0.1.1
+  image: ghcr.io/m3nowak/nats-js-prom:0.1.4
 monitor:
   #whether to enable pod monitor
   enabled: true
