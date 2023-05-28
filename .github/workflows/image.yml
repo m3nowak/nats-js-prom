@@ -46,7 +46,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Set up HELM
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v3
     - name: helm package
       run: helm package helm/chart
     - name: helm oci login
