@@ -48,7 +48,7 @@ jobs:
     - name: Set up HELM
       uses: azure/setup-helm@v3
       with:
-        version: v3.11
+        version: v3.11.3
     - name: helm package
       run: helm package helm/chart
     - name: helm oci login
