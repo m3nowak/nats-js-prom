@@ -1,1 +1,1 @@
-__version__ = "0.1.5"  # keep the spacing and double quotes
+__version__ = "0.1.6"  # keep the spacing and double quotes
