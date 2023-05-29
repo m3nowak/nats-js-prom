@@ -1,20 +1,19 @@
 import asyncio
-from datetime import datetime
 
 import nats.aio.client
 import nats.js.api
-import prometheus_client as prom
 from litestar import Litestar, get
-from litestar.datastructures import ResponseHeader
+from litestar.datastructures import ResponseHeader, State
 
-from nats_js_prom import config, injectables
+from nats_js_prom import config
 
 
 @get('/', response_headers=[ResponseHeader(name='Content-Type', value='text/plain; version=0.0.4')])
-async def hello_world(metrics: injectables.Metrics, nc: nats.aio.client.Client, cfg: config.Config) -> str:
+async def metrics_handler(state: State) -> str:
+    nc: nats.aio.client.Client = state.nc
+    cfg: config.Config = state.cfg
     js = nc.jetstream(domain=cfg.stream_domain)
     cons = await js.add_consumer(cfg.stream_name, nats.js.api.ConsumerConfig(inactive_threshold=10))
-    # str = await js.stream_info(cfg.stream_name)
     sub = await js.pull_subscribe('', cons.name, cfg.stream_name)
     pending = cons.num_pending or 0
     ret = []
@@ -36,20 +35,25 @@ async def hello_world(metrics: injectables.Metrics, nc: nats.aio.client.Client, 
             finally:
                 acks.append(msg.ack())
         await asyncio.gather(*acks)
-
+    await js.delete_consumer(cfg.stream_name, cons.name)
     return '\n'.join(ret)
 
+async def setup_nats(app: Litestar) -> None:
+    """Setup NATS connection and add it to the app state"""
+    print("I am making a new connection!")
+    cfg = app.state.cfg
+    nc = await nats.connect(cfg.nats_url, user_credentials=cfg.nats_creds_path)
+    app.state.nc = nc
 
-@get('/metrics', response_headers=[ResponseHeader(name='Content-Type', value='text/plain; version=0.0.4')])
-async def metrics(metrics: injectables.Metrics) -> str:
-    return prom.generate_latest(registry=metrics.registry).decode('utf-8')
-
+async def close_nats(app: Litestar) -> None:
+    """Close NATS connection"""
+    print("I am closing the connection!")
+    await app.state.nc.close()
 
 def create_app(cfg: config.Config) -> Litestar:
-    app = Litestar(route_handlers=[hello_world, metrics], dependencies={
-        'nc': injectables.generate_nats_provide(cfg),
-        'metrics': injectables.generate_metrics_provide(),
-        'cfg': injectables.generate_config_provide(cfg)
-    }, debug=cfg.debug)
+    app = Litestar(route_handlers=[metrics_handler],
+        debug=cfg.debug, on_startup=[setup_nats],
+        on_shutdown=[close_nats],
+        state=State({"cfg": cfg}))
 
     return app
